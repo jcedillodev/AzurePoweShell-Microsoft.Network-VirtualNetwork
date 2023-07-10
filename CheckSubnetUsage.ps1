@@ -1,4 +1,4 @@
-function Check-SubnetUsage{ <#Multi-line coment example#>
+function Check-SubnetUsage{
     param (
         [Parameter()]
         [Microsoft.Azure.Commands.Network.Models.PSChildResource]$SubnetConfig
