@@ -1,8 +1,21 @@
 function Check-SubnetUsage{
     param (
         [Parameter()]
-        [Microsoft.Azure.Commands.Network.Models.PSChildResource]$SubnetConfig
+        [Microsoft.Azure.Commands.Network.Models.PSChildResource]$SubnetConfig,
+
+        [Parameter()]
+        [Microsoft.Azure.Commands.Network.Models.PSTopLevelResource]$VirtualNetwork,
+
+        [Parameter()]
+        [String]$SubnetName
     )
+
+    # If a subnet config object is not passed to function but vnet object/subnet name are, then use the
+    # 'Get-AzVirtualNetworkSubnetConfig' cmdlet to retreive this value
+    if($null -eq $SubnetConfig)
+    {
+        $SubnetConfig = Get-AzVirtualNetworkSubnetConfig -VirtualNetwork $VirtualNetwork -Name $SubnetName
+    }
 
     # Get current script user's current Azure context
     $azContext = Get-AzContext
@@ -26,6 +39,8 @@ function Check-SubnetUsage{
         # then reset to the correct subscription extracted from the provided subnet config resource ID
         if($azContext.subscription.id -ne $vnetSubId)
         {
+            $targetSubscription = Get-AzSubscription -SubscriptionId $vnetSubId
+            Write-Host "Updating Az context from subscription '$($azContext.Subscription.Name)' to '$($targetSubscription.Name)'." -ForegroundColor Blue
             set-azcontext -subscription $vnetSubId
         }
         
