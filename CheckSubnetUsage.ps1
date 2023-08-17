@@ -73,7 +73,7 @@ function Check-SubnetUsage {
                         }
 
                         # Create a PS object and add it to the utilized cidrs array
-                        $utilizedCidrs += [ordered]@{
+                        $utilizedCidrs += [PSCustomObject][ordered]@{
                             targetCidr = $Cidr
                             subscriptionId = $subscription.Id
                             subscriptionName = $subscription.Name
@@ -114,7 +114,7 @@ function Check-SubnetUsage {
                                 }
 
                                 # Create a PS object and add it to the available cidrs array
-                                $availableCidrs += [ordered]@{
+                                $availableCidrs += [PSCustomObject][ordered]@{
                                     subscriptionId = $subscription.Id
                                     subscriptionName = $subscription.Name
                                     vnetResourceGroup = $vnetRg
